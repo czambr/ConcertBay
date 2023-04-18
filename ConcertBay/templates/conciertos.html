@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conciertos</title>
+</head>
+
+<body>
+    <div> {% include 'navbar.html' %}</div>
+
+    <h1>Conciertos Disponibles</h1>
+
+    <ul>
+        {% for id_concierto, artista, nombre_concierto, fecha, num_tickets in listadoConcierto %}
+        <li>
+            <a href="/getInfoConciertoById/{{id_concierto}}">
+                <div>
+                    <ul>
+                        <li>{{artista}}</li>
+                        <li>{{nombre_concierto}}</li>
+                        <li>{{fecha}}</li>
+                        <li>{{num_tickets}}</li>
+                    </ul>
+                    <button type="submit">Ver Detalles</button>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
