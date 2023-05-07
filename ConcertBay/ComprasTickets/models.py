@@ -6,6 +6,7 @@ from django.utils import timezone
 
 # Create your models here.
 class Usuario(models.Model):
+    user = models.OneToOneField('auth.user', on_delete=models.PROTECT, related_name='user', default=None)
     nombre = models.CharField(max_length=30)
     apellido = models.CharField(max_length=30)
     cedula = models.CharField(max_length=10)

@@ -1,0 +1,31 @@
+{% load static %} <!-- Carga archivos estáticos -->
+<html>
+
+<head>
+    <title>Reserva de Canchas</title>
+    <!-- Referencia la hoja de estilos main.css -->
+    <link href="../static/main.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="register-form-container">
+        <!-- Muestra mensajes al usuario -->
+        {% for message in messages %}
+        <div>{{ message }}</div>
+        {% endfor %}
+        <h1>Iniciar sesión</h1>
+        <!-- Invoca formulario con el csrf_token y el login_form -->
+        <form method="POST" class="register-form">
+            {% csrf_token %}
+            {{ login_form }}
+            <br />
+            <!-- Añadir botón de submit -->
+            <button type="submit" class="submit-button">Iniciar
+                sesión</button>
+        </form>
+        <!-- Añadir enlace para poder Iniciar registrarse -->
+        <p>No tienes cuenta, <a href="/registro">Regístrate</a>.</p>
+    </div>
+</body>
+
+</html>

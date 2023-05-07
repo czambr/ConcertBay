@@ -1,0 +1,30 @@
+{% load static %} <!-- Carga archivos estáticos -->
+<!doctype html>
+<html>
+
+<head>
+    <title>Reserva de Canchas</title>
+    <!-- Referencia la hoja de estilos main.css -->
+    <link href="../static/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="register-form-container">
+        <h1>Registro</h1>
+        <!-- Invoca formulario con el csrf_token y el registro_form -->
+        <form method="POST" class="register-form">
+            {% csrf_token %} <!-- Protección para ataques CSRF -->
+            {{ registro_form }} <!-- Importación de formulario -->
+            <br />
+            <!-- Añadir botón de submit -->
+            <button type="submit" class="submit-button">
+                Registrarme </button>
+        </form>
+        <p>Si ya tienes cuenta,
+            <!-- Añadir enlace para poder Iniciar sesión -->
+            <a href="/login">Inicia sesión</a>.
+        </p>
+    </div>
+</body>
+
+</html>

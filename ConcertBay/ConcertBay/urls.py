@@ -19,5 +19,8 @@ from ComprasTickets import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.MainView.as_view()),
+    path("", views.MainView.as_view(), name='landing'),
+    path("registro/", views.registro_request, name='registro'),
+    path("login/", views.login_request, name='login'),
+    path("logout/", views.logout_request, name='logout'),
 ]

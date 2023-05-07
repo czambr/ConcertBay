@@ -1,5 +1,22 @@
+<!-- Navbar -->
 <nav>
-    <a href="#">Inicio</a>
-    <a href="./conciertos.html">Verificar mis Tickets</a>
-    <a href="#">Cerrar sesion</a>
+    <!-- Si el usuario ha iniciado sesión, le aparecerá... -->
+    <!-- La opción de ir a inicio y de visualizar las canchas... -->
+    {% if user.is_authenticated %}
+    <div class="nav-container">
+        <div>
+            <a href="/">Inicio</a>
+            <a href="/canchas">Canchas</a>
+        </div>
+        <div>
+            <a>¡Hola! {{user.username}}</a>
+            <!-- Enlace para cerrar sesión -->
+            <a href="/logout">Cerrar sesión</a>
+        </div>
+    </div>
+    <!-- Caso contrario, solamente le aparecerá la opción... -->
+    <!-- De iniciar sesión... -->
+    {% else %}
+    <a href="/login">Iniciar sesión</a>
+    {% endif %}
 </nav>
