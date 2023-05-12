@@ -46,7 +46,6 @@ def registro_request(request):
             return redirect("landing")
         messages.error(request, 'Campos erroneos')
     # Si el formulario no fue válido, retorna formulario vacío
-    messages.error(request, 'Información no válida')
     form = RegistroForm()
     return render(request=request,
                   template_name='registro.html', 

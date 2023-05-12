@@ -10,6 +10,11 @@
 
 <body>
     <div class="register-form-container">
+        <!-- Muestra mensajes al usuario -->
+        {% for message in messages %}
+        <div>{{ message }}</div>
+        {% endfor %}
+
         <h1>Registro</h1>
         <!-- Invoca formulario con el csrf_token y el registro_form -->
         <form method="POST" class="register-form">
