@@ -1,25 +1,41 @@
 <!-- Navbar -->
-<nav>
-    <!-- Si el usuario ha iniciado sesión, le aparecerá... -->
-    <!-- La opción de ir a inicio y de visualizar las canchas... -->
-    {% if user.is_authenticated %}
-    <div class="nav-container">
-        <div>
-            <a href="/">Inicio</a>
-            <a href="/canchas">Canchas</a>
+<nav class="navbar navbar-expand-lg bg-dark"  data-bs-theme="dark">
+    <div class="container"> 
+        <a class="navbar-brand" href="#">
+            <i class="bi bi-stickies"></i>
+            ConcertBay
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <!-- Si el usuario ha iniciado sesión, le aparecerá-->
+            <!-- La opción de ir a inicio y de visualizar las canchas... -->
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/reservas">Conciertos Reservados</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/conciertos">Conciertos Dispoibles</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Cerrar sesión</a>
+              </li>
+            <!-- De otro modo, solo podrá registrarse o iniciar sesion-->
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Iniciar sesión</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/registro">Registrarse</a>
+              </li>
+            {% endif %}
+            </ul>
         </div>
-        <div>
-            <a>¡Hola! {{user.username}}</a>
-            <!-- Enlace para cerrar sesión -->
-            <a href="/logout">Cerrar sesión</a>
-        </div>
-    </div>
-    <!-- Caso contrario, solamente le aparecerá la opción... -->
-    <!-- De iniciar sesión... -->
-    {% else %}
-    <div>
-        <a href="/login">Iniciar sesión</a>
-        <a href="/registro">Registrarse</a>
-    </div>
-    {% endif %}
 </nav>

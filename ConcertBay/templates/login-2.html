@@ -1,0 +1,34 @@
+
+{% extends "base.html" %}
+{% block title%} Login {% endblock %}
+
+{% block content %}
+
+<div class="container bg-secondary-subtle rounded">
+    <div class="row justify-content-center py-5 my-5">
+        <!-- Muestra mensajes al usuario -->
+        {% for message in messages %}
+        <div>{{ message }}</div>
+        {% endfor %}
+        
+        <h1 class="col-12 py-4 text-center">Bienvenido a ConcertBay</h1>
+        
+        <!-- Invoca formulario con el csrf_token y el login_form -->
+        <div class="col-12 col-md-6 py-4"> 
+            <form class="d-flex flex-column" method="POST">
+                {% csrf_token %}
+                {{ login_form }}
+                <!-- Añadir botón de submit -->
+                <button type="submit" class="btn btn-dark my-3">Iniciar sesión</button>
+            </form>
+            <p class="pt-2">No tienes cuenta, <a class="btn btn-secondary btn-sm" href="/registro">Regístrate</a></p>
+        </div>
+        <!-- Añadir enlace para poder Iniciar registrarse -->
+    </div>
+</div>
+
+<footer class="container fs-5 fw-light text-center">
+    <p>ConcertBay - Derechos Reservados</p>
+</footer>
+
+{% endblock %}

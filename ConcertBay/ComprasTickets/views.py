@@ -3,7 +3,7 @@ from django.views .generic import TemplateView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 import datetime
-from .models import Concierto
+from .models import Usuario, Concierto
 from .forms import RegistroForm, LoginForm
 
 
@@ -40,11 +40,16 @@ def registro_request(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Se ha registrado exitosamente')
-            return redirect("landing")
-        messages.error(request, 'Campos erroneos')
+            user_CI = form.cleaned_data['cedula']
+            if Usuario.objects.filter(cedula=user_CI).exists():
+                messages.error(request, 'Este usuario ya existe')
+            else:
+                user = form.save()
+                login(request, user)
+                messages.success(request, 'Se ha registrado exitosamente')
+                return redirect("landing")
+        else:
+            messages.error(request, 'Campos erroneos')
     # Si el formulario no fue válido, retorna formulario vacío
     form = RegistroForm()
     return render(request=request,
@@ -68,7 +73,7 @@ def login_request(request):
     # Método no válido, retorna formulario vacío
     form = LoginForm()
     return render(request=request, 
-                  template_name='login.html', 
+                  template_name='login-2.html', 
                   context={'login_form': form})
 
 
