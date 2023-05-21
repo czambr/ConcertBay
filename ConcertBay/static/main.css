@@ -1,4 +1,4 @@
-body {
+/* body {
     padding: 2rem;
     font-family: sans-serif;
     }
@@ -26,4 +26,8 @@ body {
     display: flex;
     flex-direction: row;
     background-color: red;
-    }
+    } */
+
+.carrousel-images-size-50 {
+    height: 600px;
+}

@@ -1,33 +1,31 @@
-{% load static %} <!-- Carga archivos estáticos -->
-<html>
+{% extends "base.html" %}
+{% block title%} Login {% endblock %}
 
-<head>
-    <title>ConcertBay - Login</title>
-    <!-- Referencia la hoja de estilos main.css -->
-    <link href="../static/main.css" rel="stylesheet" />
-</head>
+{% block content %}
 
-<body>
-    <div class="register-form-container">
+<div class="container">
+    <div class="row justify-content-center py-5 my-5">
         <!-- Muestra mensajes al usuario -->
         {% for message in messages %}
         <div>{{ message }}</div>
         {% endfor %}
-        <h1>Iniciar sesión</h1>
-
         <!-- Invoca formulario con el csrf_token y el login_form -->
-        <form method="POST" class="register-form">
-            {% csrf_token %}
-            {{ login_form }}
-            <br />
-            <!-- Añadir botón de submit -->
-            <button type="submit" class="submit-button">Iniciar
-                sesión</button>
-        </form>
-
+        <div class="col-12 col-md-6 bg-secondary-subtle rounded py-4">             
+            <h1 class="py-4 text-center">Bienvenido a ConcertBay</h1>
+            <form class="d-flex flex-column py-4" method="POST">
+                {% csrf_token %}
+                {{ login_form }}
+                <!-- Añadir botón de submit -->
+                <button type="submit" class="btn btn-dark my-4">Iniciar sesión</button>
+            </form>
+            <p class="pt-2">No tienes cuenta, <a class="btn btn-secondary btn-sm" href="/registro">Regístrate</a></p>
+        </div>
         <!-- Añadir enlace para poder Iniciar registrarse -->
-        <p>No tienes cuenta, <a href="/registro">Regístrate</a>.</p>
     </div>
-</body>
+</div>
 
-</html>
+<footer class="container fs-5 fw-light text-center">
+    <p>ConcertBay - Derechos Reservados</p>
+</footer>
+
+{% endblock %}

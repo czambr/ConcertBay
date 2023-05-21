@@ -73,7 +73,7 @@ def login_request(request):
     # Método no válido, retorna formulario vacío
     form = LoginForm()
     return render(request=request, 
-                  template_name='login-2.html', 
+                  template_name='login.html', 
                   context={'login_form': form})
 
 
