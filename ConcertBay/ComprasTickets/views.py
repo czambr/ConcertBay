@@ -21,7 +21,7 @@ def getListadoConciertos (request):
             concierto.num_tickets_disponibles)
         )
     
-    return render (request, 'conciertos.html', {'listadoConcierto': detalles_concierto})
+    return render (request, 'conciertosListado.html', {'listadoConcierto': detalles_concierto})
 
 def getInfoConciertoById (request, id_concierto):
     concierto = Concierto.objects.get(id=id_concierto)

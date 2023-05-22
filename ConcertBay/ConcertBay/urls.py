@@ -23,4 +23,6 @@ urlpatterns = [
     path("registro/", views.registro_request, name='registro'),
     path("login/", views.login_request, name='login'),
     path("logout/", views.logout_request, name='logout'),
+    path("conciertos-disponibles/", views.getListadoConciertos, name='conciertos-disponibles'),
+    path("info-concert/<int:id_concierto>", views.getInfoConciertoById, name='conciertos-listado'),
 ]
