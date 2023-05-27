@@ -1,53 +1,46 @@
-
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}Conciertos Disponibles{% endblock %}
+{% extends "base.html" %} 
+{% load static %} 
+{% block title %}Conciertos Disponibles{% endblock %} 
 {% block content %}
 
+<!--#====================================================================
+    Plantilla para mostrar todos los conciertos disponibles en la plataforma 
+#====================================================================-->
 
-<article class = "container">
-    <h1>Conciertos Disponibles</h1>
-    <div class = "row">
-        {% for id_concierto, artista, nombre_concierto, fecha, num_tickets in listadoConcierto %}
-            <div class="col-12 col-md-4 py-4">
-                <div class="card border h-md-50">
-                    <img src="{% static 'img/artistas/'|add:artista|add:'.jpg' %}" class="card-img-top" alt="Imagen">
-                    <div class="card-body h-auto">
-                        <h5 class="card-title py-2 mb-0">{{nombre_concierto}}</h5>
-                        <div class="card-detail d-none">
-                            <p class="card-text">Artista: {{artista}}</p>
-                            <p class="card-text">Fecha: {{fecha}}</p>
-                            <p class="card-text">Boletos disponibles: {{num_tickets}}</p>
-                            {% if user.is_authenticated %}
-                            <a class="btn btn-dark" href="/info-concert/{{id_concierto}}">Ver Detalles</a>
-                            {% else %}
-                            <a class="btn btn-dark" href="/registro">Ver Detalles</a>
-                            {% endif %}
-                      </div>
+<article class="container">
+    <h1 class="py-4">Conciertos Disponibles</h1>
+    <div class="row">
+        {% if listadoConcierto %} 
+            {% for id_concierto, artista, nombre_concierto, fecha, num_tickets, nombre_imagen in listadoConcierto %}
+                <div class="col-12 col-md-4 py-4">
+                    <div class="card border-0 h-100" id="concert-{{id_concierto}}">
+                        <img src="{% static 'img/artistas/'|add:nombre_imagen %}.jpg" class="card-img-top" alt="Portada de {{artista}}" />
+                        <div class="card-body h-auto">
+                            <h5 class="card-title py-2 mb-0">{{nombre_concierto}}</h5>
+                            <div class="card-detail d-none">
+                                <p class="card-text">Artista: {{artista}}</p>
+                                <p class="card-text">Fecha: {{fecha}}</p>
+                                <p class="card-text">Boletos disponibles: {{num_tickets}}</p>
+                                {% if user.is_authenticated %}
+                                <a class="btn btn-dark" href="/info-concert/{{id_concierto}}">Ver Detalles</a>
+                                {% else %}
+                                <a class="btn btn-dark" href="/registro">Registrarme para comprar</a>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
+            {% endfor %} 
+        {% else %}
+            <div class="col-12 py-4">
+                Aun no hay conciertos disponibles, lo sientimos.
             </div>
-        {% endfor %}
+        {% endif %}
     </div>
 </article>
 
-<!-- <ul>
-    {% for id_concierto, artista, nombre_concierto, fecha, num_tickets in listadoConcierto %}
-    <li>
-        <a href="/getInfoConciertoById/{{id_concierto}}">
-            <div>
-                <ul>
-                    <li>{{artista}}</li>
-                    <li>{{nombre_concierto}}</li>
-                    <li>{{fecha}}</li>
-                    <li>{{num_tickets}}</li>
-                </ul>
-                <button type="submit">Ver Detalles</button>
-            </div>
-        </a>
-    </li>
-    {% endfor %}
-</ul> -->
+{% endblock %}
 
+{% block contentScript %}
+    <script src="{% static 'js/app.js' %}"></script>
 {% endblock %}

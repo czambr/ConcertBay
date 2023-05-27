@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Informacion{% endblock %}
+{% block content %}
+
+
+<div class="container-fluid container-md">
+
+    <div class="row py-5 justify-content-between">
+        <div class="col-12 col-md-5 py-4 align-self-center">
+            <article class="text-center">
+                <img src="{% static 'img/artistas/'|add:nombre_imagen|add:'.jpg' %}" class="img-fluid rounded" alt="">
+            </article>
+        </div>
+        <div class="col-12 col-md-5 py-4 order-md-3">
+            <div class="card-body bg-light shadow"> 
+                <div class="card-title fw-bold"> Descripcion:</div>
+                <div class="card-text">
+                    {{ descripcion_concierto }} 
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 py-4 order-md-2">
+            <div class="card shadow">
+                <div class="card-body bg-light">
+                    <h5 class="card-title">{{ nombre_concierto }}</h5>
+                    {% include 'componentes/formCompra.html' %}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}
+
+{% block contentScript %}
+{% endblock %}

@@ -3,11 +3,13 @@ from django.views .generic import TemplateView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 import datetime
-from .models import Usuario, Concierto
+from .models import Usuario, Concierto, Compra
 from .forms import RegistroForm, LoginForm
 
-
-# Create your views here.
+#------------------------------------------------------------
+# Listado de Todos los Conciertos Disponibles
+# Nombre de plantilla: conciertosListado.html
+#------------------------------------------------------------
 def getListadoConciertos (request):
     conciertos = Concierto.objects.all()
     detalles_concierto = []
@@ -18,22 +20,61 @@ def getListadoConciertos (request):
             concierto.artista,
             concierto.nombre_concierto,
             concierto.fecha_evento,
-            concierto.num_tickets_disponibles)
+            concierto.num_tickets_disponibles,
+            f'{concierto.id}_{concierto.artista}')
         )
-    
-    return render (request, 'conciertosListado.html', {'listadoConcierto': detalles_concierto})
+    print(detalles_concierto)
+    return render (request, 
+                   'conciertosListado.html', 
+                   {'listadoConcierto': detalles_concierto}
+                )
 
+#------------------------------------------------------------
+# Listado de Informacion de un concierto en concreto
+# Nombre de plantilla: infoConcierto.html
+#------------------------------------------------------------
 def getInfoConciertoById (request, id_concierto):
     concierto = Concierto.objects.get(id=id_concierto)
     contexto = {
+        'id':id_concierto,
         'artista': concierto.artista,
         'nombre_concierto': concierto.nombre_concierto,
         'fecha_evento': concierto.fecha_evento,
         'num_tickets': concierto.num_tickets_disponibles,
-        'descripcion': concierto.descripcion_artista,
-        'precio': concierto.precio_ticket
+        'descripcion_concierto': concierto.descripcion_artista,
+        'precio': concierto.precio_ticket,
+        'nombre_imagen': f'{id_concierto}_{concierto.artista}'
     }
-    return render (request, 'reservaConcierto.html', contexto)
+    return render (request, 'infoConcierto.html', contexto)
+
+
+#------------------------------------------------------------
+# Listado de Todos los Conciertos Reservados 
+#------------------------------------------------------------
+def getConciertoReserva (request):
+    id_user = request.user.id
+    conciertos_comprados = Compra.objects.filter(usuario_id=id_user)
+    detalles_comprados = []
+    for concierto in conciertos_comprados:
+        detalles_comprados.append((
+            concierto.id,
+            concierto.fecha_compra,
+            concierto.total_compra,
+            concierto.cantidad_tickets,
+            concierto.concierto_id,
+            concierto.usuario_id
+        ))
+    return render(request, 'conciertosReservados.html', {'listadoCompra':detalles_comprados})
+
+
+#------------------------------------------------------------
+# Reserva  de concierto
+#------------------------------------------------------------
+# def reservaConcierto(request):
+
+
+
+
 
 
 def registro_request(request):

@@ -1,7 +1,10 @@
 
 {% load static %}
+<!--#====================================================================
+    Plantilla para el carruser de imagenes de la pagina principal
+#====================================================================-->
 <div class="container-fluid px-0">
-    <div id="carrouselImages" class="carousel slide">
+    <div id="carrouselImages" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carrouselImages" data-bs-slide-to="0" class="active"
                 aria-current="true" aria-label="Slide 1"></button>
@@ -9,21 +12,21 @@
             <button type="button" data-bs-target="#carrouselImages" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner carrousel-images-size-50"> 
-            <div class="carousel-item active">
+            <div class="carousel-item active" data-bs-interval="5000">
                 <img src="{% static 'img/carrusel/concierto-1.jpg' %}" class="d-block w-100 img-fluid" alt="concierto-1" />
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Conciertos de Rock</h5>
                     <p>Reserva los conciertos mas esperados del año</p>
                 </div>
             </div>
-            <div class="carousel-item">
+            <div class="carousel-item" data-bs-interval="3000">
                 <img src="{% static 'img/carrusel/concierto-2.jpg' %}" class="d-block w-100 img-fluid" alt="concierto-2" />
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Artistas Favoritos</h5>
                     <p>No te querras perder el show de tu artista favorito </p>
                 </div>
             </div>
-            <div class="carousel-item">
+            <div class="carousel-item" data-bs-interval="3000">
                 <img src="{% static 'img/carrusel/concierto-4.jpg' %}" class="d-block w-100 img-fluid" alt="concierto-3" />
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Baila todo lo que puedas</h5>
