@@ -79,7 +79,7 @@ def getInfoConciertoById (request, id_concierto):
         reserva = reservaConcierto(request, contexto)
         if reserva:
             messages.success(request, '¡Compra realizada con exito!')
-            return redirect('conciertos-reservados')
+            return redirect('mis-tickets')
         else:
             messages.error(request, '¡Lo Sentimos! Ha ocurrido un problema')
 
@@ -88,22 +88,38 @@ def getInfoConciertoById (request, id_concierto):
 
 #------------------------------------------------------------
 # Listado de Todos los Conciertos Reservados 
-# Nombre de la plantilla: 
+# Nombre de la plantilla: mis-tickets.html
 #------------------------------------------------------------
 def getConciertoReserva (request):
     id_user = request.user.id
-    conciertos_comprados = Compra.objects.filter(usuario_id=id_user)
-    detalles_comprados = []
-    for concierto in conciertos_comprados:
-        detalles_comprados.append((
-            concierto.id,
-            concierto.fecha_compra,
-            concierto.total_compra,
-            concierto.cantidad_tickets,
-            concierto.concierto_id,
-            concierto.usuario_id
-        ))
-    return render(request, 'conciertosReservados.html', {'listadoCompra':detalles_comprados})
+    conciertos_comprados = Compra.objects.filter(usuario_id=id_user).order_by('concierto_id')
+    detalles_portadas = {}
+    detalles_comprados = {}
+    for itemTicket in conciertos_comprados:
+        concierto_id = str(itemTicket.concierto_id)
+        if concierto_id not in detalles_comprados:
+            detalle_concierto = Concierto.objects.get(id=itemTicket.concierto_id)
+            detalles_portadas[concierto_id] = [detalle_concierto.nombre_concierto,
+                                               detalle_concierto.artista,
+                                              f'{concierto_id}_{detalle_concierto.artista}']
+            detalles_comprados[concierto_id] = [(itemTicket.id,
+                                                itemTicket.fecha_compra,
+                                                itemTicket.total_compra,
+                                                itemTicket.cantidad_tickets,
+                                                itemTicket.concierto_id,
+                                                itemTicket.usuario_id)]
+        else:
+            detalles_comprados[concierto_id].append((
+                itemTicket.id,
+                itemTicket.fecha_compra,
+                itemTicket.total_compra,
+                itemTicket.cantidad_tickets,
+                itemTicket.concierto_id,
+                itemTicket.usuario_id
+            ))
+    return render(request, 'mis-tickets.html', {'listadoPortada': detalles_portadas, 
+                                                'listadoCompra':detalles_comprados                                                 
+                                                })
 
 
 

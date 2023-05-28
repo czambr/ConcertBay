@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mis Tickets{% endblock %}
+{% block content %}
+    
+<div class="container py-4">
+    <h1 class="display-4 pt-5">Mis Tickets</h1>
+    {% if listadoPortada %}
+      {% for id_concierto, detalle_portada in listadoPortada.items %}
+        <div class="row my-5 border border-4 rounded-2">
+              <div class="col-12 col-md-4 py-4 d-flex align-items-center">
+                <img src="{% static 'img/artistas/'|add:detalle_portada.2|add:'.jpg' %}" class="img-fluid w-100 shadow-lg" alt="{{detalle_portada.1}}">
+              </div>
+              <div class="col-12 col-md-8 py-4">
+                {% for id_concierto_listado, listado_tickets in listadoCompra.items%}
+                  {% if id_concierto_listado == id_concierto%}
+                    <h2 class="pb-5">{{detalle_portada.1}} / <span class="text-dark-emphasis fs-5">{{detalle_portada.0}} </span></h2>
+                    <div class="container px-3">
+                        <div class="row pb-4 fw-bold align-items-center">
+                          <div class="col-1">#id</div>
+                          <div class="col-5">Fecha de Compra</div>
+                          <div class="col-2">#Tickets</div>
+                          <div class="col-2">#Total</div>
+                          <div class="col-2">¿Desea Cancelar?</div>
+                        </div>
+                      {% for id_ticket, fecha_compra, total_compra, cantidad_ticket, concierto_id, usuario_id in listado_tickets %}
+                          <div class="row py-1">
+                              <div class="col-1">{{id_ticket}}</div>
+                              <div class="col-5">{{fecha_compra|date:'l, d \d\e F \d\e Y - H:i' }}</div>
+                              <div class="col-2">{{cantidad_ticket}}</div>
+                              <div class="col-2">{{total_compra}}</div>
+                              <button class="col-2 btn btn-danger py-0 px-0 border-0">Cancelar</button>
+                          </div>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+        </div>
+      {% endfor %}
+    {% else %}
+          <div class="text-center">Sin Compras Realizadas</div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block contentScript %}
+{% endblock %}

@@ -24,6 +24,6 @@ urlpatterns = [
     path("login/", views.login_request, name='login'),
     path("logout/", views.logout_request, name='logout'),
     path("conciertos-disponibles/", views.getListadoConciertos, name='conciertos-disponibles'),     # ==> Todos los conciertos disponibles
-    path("conciertos-reservados/", views.getConciertoReserva, name='conciertos-reservados'),       # ==> Solo los conciertos reservados por el usuario
+    path("mis-tickets/", views.getConciertoReserva, name='mis-tickets'),                            # ==> Solo los conciertos reservados por el usuario
     path("info-concert/<int:id_concierto>", views.getInfoConciertoById, name='conciertos-listado'), # ==> información detallada del concierto
 ]
