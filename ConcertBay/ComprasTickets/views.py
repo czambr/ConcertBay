@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views .generic import TemplateView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-import datetime
+from django.utils import timezone
 from .models import Usuario, Concierto, Compra
 from .forms import RegistroForm, LoginForm
 from django.http.response import HttpResponse
@@ -40,22 +40,23 @@ def reservaConcierto(request, infoCompra):
 
  #==> Datos de la Base:
     id_concierto = infoCompra['id']
+    fecha_evento = infoCompra['fecha_evento']
     tickets_disponibles = infoCompra['num_tickets']
     precio_ticket = infoCompra['precio']
 
-    if tickets_disponibles >= tickets_comprados:
-       total_factura = round(precio_ticket * tickets_comprados)
-       ticket_comprado = Compra(total_compra = total_factura,
-                                cantidad_tickets = tickets_comprados,
-                                concierto_id = id_concierto,
-                                usuario_id = request.user.id
-                            )
-       ticket_comprado.save()
+    if  tickets_disponibles >= tickets_comprados and fecha_evento > timezone.now() :
+        total_factura = round(precio_ticket * tickets_comprados)
+        ticket_comprado = Compra(total_compra = total_factura,
+                                    cantidad_tickets = tickets_comprados,
+                                    concierto_id = id_concierto,
+                                    usuario_id = request.user.id
+                                )
+        ticket_comprado.save()
 
-       concierto = Concierto.objects.get(id=id_concierto)
-       concierto.num_tickets_disponibles -= tickets_comprados
-       concierto.save()
-       return True
+        concierto = Concierto.objects.get(id=id_concierto)
+        concierto.num_tickets_disponibles -= tickets_comprados
+        concierto.save()
+        return True
     else:
         return False
     
@@ -86,6 +87,34 @@ def getInfoConciertoById (request, id_concierto):
     return render (request, 'infoConcierto.html', contexto)
 
 
+    
+#------------------------------------------------------------
+# Cancelacion de compra de tickets
+# Funcion encargada de realizar hacer la cancelacion de un
+# ticket comprado
+#------------------------------------------------------------
+def cancelarTicket (request):
+  #==> Datos del formulario
+  ticket_cancelado = int(request.POST['idTicket'][0])
+
+  #==> Datos de la base
+  info_ticketComprado = Compra.objects.get(id=ticket_cancelado)
+  boletos_comprados = info_ticketComprado.cantidad_tickets
+
+  info_conciertoComprado = Concierto.objects.get(id=info_ticketComprado.concierto_id)
+  fecha_evento = info_conciertoComprado.fecha_evento
+
+  fecha_actual = timezone.now()
+  diferencia_dias = (fecha_actual - fecha_evento).days
+
+  if diferencia_dias >= 2:
+      info_ticketComprado.delete()
+      info_conciertoComprado.num_tickets_disponibles += boletos_comprados
+      info_conciertoComprado.save()
+      
+
+
+
 #------------------------------------------------------------
 # Listado de Todos los Conciertos Reservados 
 # Nombre de la plantilla: mis-tickets.html
@@ -101,6 +130,7 @@ def getConciertoReserva (request):
             detalle_concierto = Concierto.objects.get(id=itemTicket.concierto_id)
             detalles_portadas[concierto_id] = [detalle_concierto.nombre_concierto,
                                                detalle_concierto.artista,
+                                               detalle_concierto.fecha_evento,
                                               f'{concierto_id}_{detalle_concierto.artista}']
             detalles_comprados[concierto_id] = [(itemTicket.id,
                                                 itemTicket.fecha_compra,
@@ -117,6 +147,10 @@ def getConciertoReserva (request):
                 itemTicket.concierto_id,
                 itemTicket.usuario_id
             ))
+    if request.method == 'POST':
+        cancelarTicket(request)
+        return redirect(request.path)
+
     return render(request, 'mis-tickets.html', {'listadoPortada': detalles_portadas, 
                                                 'listadoCompra':detalles_comprados                                                 
                                                 })

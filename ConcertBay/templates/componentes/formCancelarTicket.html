@@ -1,0 +1,21 @@
+<form class="fs-6" method="POST">
+    {% csrf_token %} 
+    <div class="row  align-items-center py-1">
+      <div class="col-1 px-0">
+        <input type="text" 
+                class="form-control px-1 border-0" 
+                value="{{id_ticket}}"
+                name="idTicket" 
+                readonly>
+      </div>
+      <div class="col-5 px-0">  {{fecha_compra|date:'D, d \d\e F \d\e Y - H:i' }} </div>
+      <div class="col-1 px-0"> {{cantidad_ticket}} </div>
+      <div class="col-3 px-0 text-center">$ {{total_compra|floatformat:2}} </div>
+      <div class="col-2 d-flex align-items-center justify-content-center px-0">
+        <button class="btn btn-danger py-0 px-1 border-0 w-100"
+                type="submit">
+                Cancelar
+        </button>
+      </div>
+    </div>
+</form>

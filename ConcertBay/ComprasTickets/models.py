@@ -22,6 +22,6 @@ class Compra(models.Model):
     fecha_compra = models.DateTimeField(default=timezone.now)
     total_compra = models.FloatField()
     cantidad_tickets = models.IntegerField(default=1)
-    usuario = models.ForeignKey(Usuario, on_delete=models.PROTECT)
-    concierto = models.ForeignKey(Concierto, on_delete=models.PROTECT)
+    usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+    concierto = models.ForeignKey(Concierto, on_delete=models.DO_NOTHING)
 
