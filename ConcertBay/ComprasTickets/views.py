@@ -5,6 +5,7 @@ from django.contrib import messages
 import datetime
 from .models import Usuario, Concierto, Compra
 from .forms import RegistroForm, LoginForm
+from django.http.response import HttpResponse
 
 #------------------------------------------------------------
 # Listado de Todos los Conciertos Disponibles
@@ -23,12 +24,41 @@ def getListadoConciertos (request):
             concierto.num_tickets_disponibles,
             f'{concierto.id}_{concierto.artista}')
         )
-    print(detalles_concierto)
     return render (request, 
                    'conciertosListado.html', 
                    {'listadoConcierto': detalles_concierto}
                 )
 
+#------------------------------------------------------------
+# Reserva  de concierto:
+#    Funcion de encargada de realizar la actualizacion del 
+#    numero de tickets comprados y tickets disponibles
+#------------------------------------------------------------
+def reservaConcierto(request, infoCompra):
+ #==> Datos del formulario
+    tickets_comprados = int(request.POST['ticketsComprados'])
+
+ #==> Datos de la Base:
+    id_concierto = infoCompra['id']
+    tickets_disponibles = infoCompra['num_tickets']
+    precio_ticket = infoCompra['precio']
+
+    if tickets_disponibles >= tickets_comprados:
+       total_factura = round(precio_ticket * tickets_comprados)
+       ticket_comprado = Compra(total_compra = total_factura,
+                                cantidad_tickets = tickets_comprados,
+                                concierto_id = id_concierto,
+                                usuario_id = request.user.id
+                            )
+       ticket_comprado.save()
+
+       concierto = Concierto.objects.get(id=id_concierto)
+       concierto.num_tickets_disponibles -= tickets_comprados
+       concierto.save()
+       return True
+    else:
+        return False
+    
 #------------------------------------------------------------
 # Listado de Informacion de un concierto en concreto
 # Nombre de plantilla: infoConcierto.html
@@ -44,12 +74,21 @@ def getInfoConciertoById (request, id_concierto):
         'descripcion_concierto': concierto.descripcion_artista,
         'precio': concierto.precio_ticket,
         'nombre_imagen': f'{id_concierto}_{concierto.artista}'
-    }
+        }
+    if request.method == 'POST':
+        reserva = reservaConcierto(request, contexto)
+        if reserva:
+            messages.success(request, '¡Compra realizada con exito!')
+            return redirect('conciertos-reservados')
+        else:
+            messages.error(request, '¡Lo Sentimos! Ha ocurrido un problema')
+
     return render (request, 'infoConcierto.html', contexto)
 
 
 #------------------------------------------------------------
 # Listado de Todos los Conciertos Reservados 
+# Nombre de la plantilla: 
 #------------------------------------------------------------
 def getConciertoReserva (request):
     id_user = request.user.id
@@ -67,10 +106,11 @@ def getConciertoReserva (request):
     return render(request, 'conciertosReservados.html', {'listadoCompra':detalles_comprados})
 
 
-#------------------------------------------------------------
-# Reserva  de concierto
-#------------------------------------------------------------
-# def reservaConcierto(request):
+
+
+
+
+
 
 
 

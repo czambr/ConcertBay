@@ -1,32 +1,63 @@
 <!-- form -->
 <form id="formReservacion" class="flex-column mx-2" method="POST">
+    {% csrf_token %} 
     <div class="my-4 border-bottom">
         <label for="artistaConcierto" class="form-label text-dark-emphasis">Artista</label>
-        <input id="artistaConcierto"  class="form-control bg-light border-0" 
+        <input id="artistaConcierto"  class="form-control bg-light border-0"
+               name="artistaConcierto" 
                type="text"  
                aria-describedby="Nombre Artista" 
-               disabled="disabled" 
+               readonly
                value="{{artista}}">
     </div>
     <div class="my-4 border-bottom">
         <label for="fechaConcierto" class="form-label text-dark-emphasis">Fecha</label>
         <input id="fechaConcierto"  class="form-control bg-light border-0 px-0" 
+               name="fechaConcierto" 
                type="text"  
                aria-describedby="Fecha Concierto" 
-               disabled="disabled" 
+               readonly
                value="{{fecha_evento|date:'l, d \d\e F \d\e Y - H:i' }}">
     </div>
     <div class="my-4 border-bottom">
         <label for="precioConcierto" class="form-label text-dark-emphasis">Precio de entrada</label>
         <input id="precioConcierto"  class="form-control bg-light border-0" 
+               name="precioConcierto" 
                type="text"  
                aria-describedby="Precio de entrada" 
-               disabled="disabled" 
+               readonly
+               data-valor-precio="{{precio|floatformat:2}}"
                value="$ {{precio|floatformat:2}}">
+    </div>
+    <div class="my-4 border-bottom">
+        <label for="entradasDisponibles" class="form-label text-dark-emphasis">Entradas Disponibles</label>
+        <input id="entradasDisponibles"  class="form-control bg-light border-0" 
+               name="entradasDisponibles"
+               type="text"  
+               aria-describedby="Entradas Disponibles" 
+               readonly
+               data-valor-num-ticket = "{{num_tickets}}"
+               value="{{num_tickets}}">
+    </div>
+    <div class="my-4 broder-bottom">
+        <label for="ticketsComprados" class="form-label text-dark-emphasis">Cantidad de Boletos:</label>
+        <input id="ticketsComprados"  class="form-control-sm"
+               name="ticketsComprados" 
+               type="number" 
+               inputmode="numeric" 
+               pattern="[1-9][0-9]*" 
+               step="1" 
+               min="1" max="{{num_tickets}}" 
+               value="1">
+    </div>
+    <div class="my-4 broder-bottom">
+        <div class="form-label text-dark-emphasis">
+            El total de su compra es: <span class="fw-bold" id="totalCompra">$ {{precio|floatformat:2}}</span>
+        </div>
     </div>
     <div class="text-center">
         <button class="btn btn-dark w-100" type="submit">
-            Comprar Entrada <i class="icon-ticket"></i>
+            Comprar Entradas <i class="icon-ticket"></i>
         </button>
     </div>
 </form>
