@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Inicio{% endblock %}
+
 {% block content %}
 
-{% include 'componentes/carrusel.html' %}
+    {% include 'componentes/notificacion.html' %}
+    {% include 'componentes/carrusel.html' %}
 
+{% endblock %}
+
+{% block contentScript %}
+<script src="{% static 'js/notificacion.js' %}"></script>
 {% endblock %}

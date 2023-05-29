@@ -1,0 +1,19 @@
+<div id="notificacionToast" aria-live="polite" aria-atomic="true" class="bg-body-secondary position-relative rounded-3">
+    <div class="toast-container p-3 top-0 start-50 translate-middle-x">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <span class="text-dark rounded me-2"><i class="bi bi-info-circle-fill"></i></span>
+                        <strong class="me-auto">ConcertBay</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+     </div>
+</div>
+    

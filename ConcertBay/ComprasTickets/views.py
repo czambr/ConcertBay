@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.utils import timezone
 from .models import Usuario, Concierto, Compra
 from .forms import RegistroForm, LoginForm
-from django.http.response import HttpResponse
+
 
 #------------------------------------------------------------
 # Listado de Todos los Conciertos Disponibles
@@ -56,9 +56,12 @@ def reservaConcierto(request, infoCompra):
         concierto = Concierto.objects.get(id=id_concierto)
         concierto.num_tickets_disponibles -= tickets_comprados
         concierto.save()
-        return True
+        return {'estado': True, 'mensaje': f'Has comprado {tickets_comprados} tickets'}
     else:
-        return False
+        if tickets_disponibles < tickets_comprados:
+            return {'estado': False, 'mensaje': f'Lo sentimos. Ya no quedan tickets'}
+        elif fecha_evento <= timezone.now():
+            return {'estado': False, 'mensaje': f'Fecha limite. Ya no se pueden realizar compras'}
     
 #------------------------------------------------------------
 # Listado de Informacion de un concierto en concreto
@@ -78,11 +81,11 @@ def getInfoConciertoById (request, id_concierto):
         }
     if request.method == 'POST':
         reserva = reservaConcierto(request, contexto)
-        if reserva:
-            messages.success(request, '¡Compra realizada con exito!')
+        if reserva['estado']:
+            messages.success(request, reserva['mensaje'])
             return redirect('mis-tickets')
         else:
-            messages.error(request, '¡Lo Sentimos! Ha ocurrido un problema')
+            messages.error(request, reserva['mensaje'] )
 
     return render (request, 'infoConcierto.html', contexto)
 
@@ -95,25 +98,27 @@ def getInfoConciertoById (request, id_concierto):
 #------------------------------------------------------------
 def cancelarTicket (request):
   #==> Datos del formulario
-  ticket_cancelado = int(request.POST['idTicket'][0])
+    ticket_cancelado = int(request.POST['idTicket'][0])
 
   #==> Datos de la base
-  info_ticketComprado = Compra.objects.get(id=ticket_cancelado)
-  boletos_comprados = info_ticketComprado.cantidad_tickets
+    info_ticketComprado = Compra.objects.get(id=ticket_cancelado)
+    boletos_comprados = info_ticketComprado.cantidad_tickets
 
-  info_conciertoComprado = Concierto.objects.get(id=info_ticketComprado.concierto_id)
-  fecha_evento = info_conciertoComprado.fecha_evento
+    info_conciertoComprado = Concierto.objects.get(id=info_ticketComprado.concierto_id)
+    fecha_evento = info_conciertoComprado.fecha_evento
 
-  fecha_actual = timezone.now()
-  diferencia_dias = (fecha_actual - fecha_evento).days
+    fecha_actual = timezone.now()
+    diferencia_dias = abs((fecha_actual - fecha_evento).days)
+    print(diferencia_dias)
+    if diferencia_dias >= 2:
+        info_ticketComprado.delete()
+        info_conciertoComprado.num_tickets_disponibles += boletos_comprados
+        info_conciertoComprado.save()
+        return {'estado': True, 'mensaje': f'Has cancelado {boletos_comprados} tickets para el concierto de {info_conciertoComprado.artista}'}
+    else:
+        return {'estado': False, 'mensaje': f'No se puede cancelar el ticket para el concierto de {info_conciertoComprado.artista}'}
 
-  if diferencia_dias >= 2:
-      info_ticketComprado.delete()
-      info_conciertoComprado.num_tickets_disponibles += boletos_comprados
-      info_conciertoComprado.save()
-      
-
-
+                
 
 #------------------------------------------------------------
 # Listado de Todos los Conciertos Reservados 
@@ -148,21 +153,17 @@ def getConciertoReserva (request):
                 itemTicket.usuario_id
             ))
     if request.method == 'POST':
-        cancelarTicket(request)
-        return redirect(request.path)
+        ticket_cancelado = cancelarTicket(request)
+        
+        if ticket_cancelado['estado']:
+            messages.success(request, ticket_cancelado['mensaje'])
+            return redirect(request.path)
+        else:
+            messages.error(request, ticket_cancelado['mensaje'])
 
     return render(request, 'mis-tickets.html', {'listadoPortada': detalles_portadas, 
                                                 'listadoCompra':detalles_comprados                                                 
                                                 })
-
-
-
-
-
-
-
-
-
 
 
 
@@ -199,7 +200,6 @@ def login_request(request):
                 login(request, user)
                 messages.info(request, f'Ha iniciado sesión como: {username}')
                 return redirect("landing")
-            messages.error(request, 'Credenciales incorrectas')
         messages.error(request, 'Credenciales incorrectas')
     # Método no válido, retorna formulario vacío
     form = LoginForm()

@@ -1,4 +1,5 @@
 {% extends "base.html" %} 
+{% load static %}
 {% block title %} Registro {% endblock %} 
 {% block content %}
 
@@ -9,9 +10,7 @@
 <div class="register-form-container">
   <div class="row justify-content-center py-5 my-5">
     <!-- Muestra mensajes al usuario -->
-    {% for message in messages %}
-    <div>{{ message }}</div>
-    {% endfor %}
+    {% include 'componentes/notificacion.html' %}
     <div class="col-12 col-md-6 bg-secondary-subtle rounded py-4">
       <h1 class="py-4 text-center">Registro</h1>
       <!-- Invoca formulario con el csrf_token y el registro_form -->
@@ -30,4 +29,8 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block contentScript %}
+    <script src="{% static 'js/notificacion.js' %}"></script>
 {% endblock %}

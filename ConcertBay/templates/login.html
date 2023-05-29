@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title%} Login {% endblock %}
 
 {% block content %}
@@ -10,9 +11,9 @@
 <div class="container">
     <div class="row justify-content-center py-5 my-5">
         <!-- Muestra mensajes al usuario -->
-        {% for message in messages %}
-        <div>{{ message }}</div>
-        {% endfor %}
+
+        {% include 'componentes/notificacion.html' %}
+
         <!-- Invoca formulario con el csrf_token y el login_form -->
         <div class="col-12 col-md-6 bg-secondary-subtle rounded py-4">             
             <h1 class="py-4 text-center">Bienvenido a ConcertBay</h1>
@@ -28,8 +29,9 @@
     </div>
 </div>
 
-<footer class="container fs-5 fw-light text-center">
-    <p>ConcertBay - Derechos Reservados</p>
-</footer>
 
+{% endblock %}
+
+{% block contentScript %}
+    <script src="{% static 'js/notificacion.js' %}"></script>
 {% endblock %}

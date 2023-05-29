@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Mis Tickets{% endblock %}
 {% block content %}
+{% include 'componentes/notificacion.html' %}
     
 <div class="container py-4">
     <h1 class="display-4 pt-5">Mis Tickets</h1>
@@ -44,4 +45,5 @@
 {% endblock %}
 
 {% block contentScript %}
+<script src="{% static 'js/notificacion.js' %}"></script>
 {% endblock %}

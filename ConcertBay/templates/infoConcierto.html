@@ -3,7 +3,7 @@
 {% block title %}Informacion{% endblock %}
 {% block content %}
 
-
+{% include 'componentes/notificacion.html' %}
 <div class="container-fluid container-md">
 
     <div class="row py-5 justify-content-between">
@@ -36,4 +36,5 @@
 
 {% block contentScript %}
 <script src="{% static 'js/formCompra.js' %}"></script>
+<script src="{% static 'js/notificacion.js' %}"></script>
 {% endblock %}
